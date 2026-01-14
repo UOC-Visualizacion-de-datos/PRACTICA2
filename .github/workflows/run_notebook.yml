@@ -5,8 +5,11 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
-  schedule:
-    - cron: '0 0 * * 1' # Ejecutar todos los lunes a medianoche
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
@@ -26,19 +29,23 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Execute Notebook
+    - name: Execute and Convert Notebook
       run: |
-        jupyter nbconvert --to notebook --execute PRA2-Pedro-Berberana.ipynb --output executed_notebook.ipynb
-    
-    - name: Convert to HTML
-      run: |
-        jupyter nbconvert --to html executed_notebook.ipynb --output index.html
+        mkdir public
+        jupyter nbconvert --execute --to html PRA2-Pedro-Berberana.ipynb --output public/index.html
+        touch public/.nojekyll
+
+    - name: Debug Folder Structure
+      run: ls -lR public/
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
+
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: .
+        path: public/
+
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
