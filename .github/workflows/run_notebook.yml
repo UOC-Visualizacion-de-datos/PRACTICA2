@@ -1,0 +1,42 @@
+name: Run Jupyter Notebook
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  schedule:
+    - cron: '0 0 * * 1' # Ejecutar todos los lunes a medianoche
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Execute Notebook
+      run: |
+        jupyter nbconvert --to notebook --execute PRA2-Pedro-Berberana.ipynb --output executed_notebook.ipynb
+
+    - name: Convert to HTML
+    # Esto genera un reporte legible que se puede descargar como artefacto
+      run: |
+        jupyter nbconvert --to html executed_notebook.ipynb
+
+    - name: Upload results
+      uses: actions/upload-artifact@v3
+      with:
+        name: notebook-report
+        path: executed_notebook.html
