@@ -5,3 +5,5 @@ matplotlib
 plotly
 nbconvert
 ipykernel
+xlrd
+openpyxl
