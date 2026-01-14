@@ -7,3 +7,4 @@ nbconvert
 ipykernel
 xlrd
 openpyxl
+sklearn
