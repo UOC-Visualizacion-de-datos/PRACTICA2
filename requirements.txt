@@ -7,4 +7,4 @@ nbconvert
 ipykernel
 xlrd
 openpyxl
-sklearn
+scikit-learn
